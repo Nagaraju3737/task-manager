@@ -1,12 +1,18 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
+import fs from 'fs'
 import mongoose from 'mongoose'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 5000
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const clientDistPath = path.resolve(__dirname, '../dist')
 
 app.use(express.json({ limit: '1mb' }))
 
@@ -106,6 +112,22 @@ app.put('/api/state', async (req, res, next) => {
     next(error)
   }
 })
+
+if (process.env.NODE_ENV === 'production') {
+  if (fs.existsSync(clientDistPath)) {
+    app.use(express.static(clientDistPath))
+
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api/')) {
+        return next()
+      }
+
+      res.sendFile(path.join(clientDistPath, 'index.html'))
+    })
+  } else {
+    console.warn('Frontend build not found. Run "npm run build" during deploy to generate dist/.')
+  }
+}
 
 app.use((error, _req, res, _next) => {
   console.error(error)
