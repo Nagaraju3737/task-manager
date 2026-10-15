@@ -290,7 +290,7 @@ function App() {
     <main className="min-h-screen bg-black px-4 py-8 text-zinc-100 md:px-8">
       <div className="mx-auto max-w-4xl rounded-3xl border border-zinc-800 bg-gradient-to-b from-zinc-950 to-black shadow-[0_30px_100px_rgba(255,255,255,0.08)]">
         <header className="border-b border-zinc-800 px-6 py-8 md:px-10">
-          <h1 className="text-2xl font-semibold text-white md:text-3xl">Covey Matrix Task Manager</h1>
+          <h1 className="text-2xl font-semibold text-white md:text-3xl">Task Manager</h1>
           {syncError && <p className="mt-3 text-sm text-red-400">{syncError}</p>}
         </header>
 
