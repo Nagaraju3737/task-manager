@@ -149,6 +149,17 @@ function App() {
     await persistState(nextTasks, folders)
   }
 
+  const deleteFolder = async (folderId) => {
+    const nextFolders = folders.filter(f => f.id !== folderId)
+    setFolders(nextFolders)
+    
+    if (activeTarget === folderId) {
+      setActiveTarget('main')
+    }
+    
+    await persistState(tasks, nextFolders)
+  }
+
   const getQuadrant = (task) => {
     if (task.important && task.urgent) return 1
     if (task.important && !task.urgent) return 2
@@ -348,13 +359,20 @@ function App() {
               Main Tasks
             </button>
             {folders.map(folder => (
-              <button
-                key={folder.id}
-                className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition ${activeTarget === folder.id ? 'border-white bg-white text-black' : 'border-zinc-700 bg-zinc-950 text-zinc-300 hover:border-zinc-500'}`}
-                onClick={() => setActiveTarget(folder.id)}
-              >
-                {folder.name}
-              </button>
+              <div key={folder.id} className="flex items-center gap-1">
+                <button
+                  className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition ${activeTarget === folder.id ? 'border-white bg-white text-black' : 'border-zinc-700 bg-zinc-950 text-zinc-300 hover:border-zinc-500'}`}
+                  onClick={() => setActiveTarget(folder.id)}
+                >
+                  {folder.name}
+                </button>
+                <button
+                  className="h-7 w-7 rounded-md text-lg leading-none text-zinc-500 transition hover:bg-zinc-800 hover:text-white"
+                  onClick={() => deleteFolder(folder.id)}
+                >
+                  ×
+                </button>
+              </div>
             ))}
           </div>
         </section>
